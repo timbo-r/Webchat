@@ -24,8 +24,8 @@ import './style.scss'
 
 const MAX_GET_MEMORY_TIME = 10 * 1000 // in ms
 const FAILED_TO_GET_MEMORY = 'Could not get memory from webchatMethods.getMemory :'
-const WRONG_MEMORY_FORMAT
-  = 'Wrong memory format, expecting : { "memory": <json>, "merge": <boolean> }'
+const WRONG_MEMORY_FORMAT =
+  'Wrong memory format, expecting : { "memory": <json>, "merge": <boolean> }'
 const MAX_NUMBER_WITHOUT_MESSAGES_BEFORE_WAITING = 6
 
 @connect(
@@ -36,16 +36,16 @@ const MAX_NUMBER_WITHOUT_MESSAGES_BEFORE_WAITING = 6
     conversationId: state.conversation.conversationId,
     lastMessageId: state.conversation.lastMessageId,
     messages: state.messages,
-    }),
+  }),
   {
-  postMessage,
-  pollMessages,
-  createConversation,
-  removeMessage,
-  removeAllMessages,
-  addUserMessage,
-  addBotMessage,
-  removeConversationId,
+    postMessage,
+    pollMessages,
+    createConversation,
+    removeMessage,
+    removeAllMessages,
+    addUserMessage,
+    addBotMessage,
+    removeConversationId,
   },
 )
 class Chat extends Component {
@@ -55,7 +55,7 @@ class Chat extends Component {
     inputHeight: 50, // height of input (default: 50px)
   }
 
-  static getDerivedStateFromProps (props, state) {
+  static getDerivedStateFromProps(props, state) {
     const { messages, show } = props
 
     if (props.getLastMessage && messages && messages !== state.messages && messages.length > 0) {
@@ -72,8 +72,13 @@ class Chat extends Component {
     return null
   }
 
-  componentDidMount () {
-    const { sendMessagePromise, loadConversationHistoryPromise, conversationHistoryId, show } = this.props
+  componentDidMount() {
+    const {
+      sendMessagePromise,
+      loadConversationHistoryPromise,
+      conversationHistoryId,
+      show,
+    } = this.props
 
     this._isPolling = false
     if (!sendMessagePromise && show) {
@@ -85,7 +90,7 @@ class Chat extends Component {
     }
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     const { show } = this.state
     const { removeAllMessages, conversationHistoryId, loadConversationHistoryPromise } = this.props
 
@@ -100,13 +105,17 @@ class Chat extends Component {
     if (show && !this.props.sendMessagePromise && !this._isPolling) {
       this.doMessagesPolling()
     }
-    if (show && prevProps.conversationHistoryId !== conversationHistoryId && loadConversationHistoryPromise) {
+    if (
+      show &&
+      prevProps.conversationHistoryId !== conversationHistoryId &&
+      loadConversationHistoryPromise
+    ) {
       removeAllMessages()
       loadConversationHistoryPromise(conversationHistoryId).then(this.loadConversation)
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (this.messagesDelays.length) {
       this.messagesDelays.forEach(messageDelay => clearTimeout(messageDelay))
     }
@@ -176,28 +185,25 @@ class Chat extends Component {
 
   shouldHideBotReply = responseData => {
     return (
-      responseData.conversation
-      && responseData.conversation.skill === 'qna'
-      && Array.isArray(responseData.nlp)
-      && !responseData.nlp.length
-      && Array.isArray(responseData.messages)
-      && !responseData.messages.length
+      responseData.conversation &&
+      responseData.conversation.skill === 'qna' &&
+      Array.isArray(responseData.nlp) &&
+      !responseData.nlp.length &&
+      Array.isArray(responseData.messages) &&
+      !responseData.messages.length
     )
   }
 
-  _onSendMessagePromiseCompleted = (res) => {
-    const {
-      addBotMessage,
-      defaultMessageDelay,
-    } = this.props
+  _onSendMessagePromiseCompleted = res => {
+    const { addBotMessage, defaultMessageDelay } = this.props
     if (!res) {
       throw new Error('Fail send message')
     }
     const data = res.data
-    const messages
-    = data.messages.length === 0
-      ? [{ type: 'text', content: 'No reply', error: true }]
-      : data.messages
+    const messages =
+      data.messages.length === 0
+        ? [{ type: 'text', content: 'No reply', error: true }]
+        : data.messages
     if (!this.shouldHideBotReply(data)) {
       let delay = 0
       messages.forEach((message, index) => {
@@ -211,12 +217,12 @@ class Chat extends Component {
           delay,
         )
 
-        delay
-        += message.delay || message.delay === 0
+        delay +=
+          message.delay || message.delay === 0
             ? message.delay * 1000
             : defaultMessageDelay === null || defaultMessageDelay === undefined
-              ? 0
-              : defaultMessageDelay * 1000
+            ? 0
+            : defaultMessageDelay * 1000
       })
     }
   }
@@ -301,13 +307,16 @@ class Chat extends Component {
     if (!sendMessagePromise && !conversationId) {
       // // First time sending a message and no conversationId, so create one.
       // This will cause the component to be updated and polling will start automatically
-      this.props.createConversation(channelId, token).then(({ id, chatId }) => {
-        storeCredentialsToLocalStorage(chatId, id, preferences.conversationTimeToLive, channelId)
-        this._sendMessage(attachment, userMessage)
-      }).catch(err => {
-        console.error('Creating the Conversation has failed, unable to post message')
-        console.error(err)
-      })
+      this.props
+        .createConversation(channelId, token)
+        .then(({ id, chatId }) => {
+          storeCredentialsToLocalStorage(chatId, id, preferences.conversationTimeToLive, channelId)
+          this._sendMessage(attachment, userMessage)
+        })
+        .catch(err => {
+          console.error('Creating the Conversation has failed, unable to post message')
+          console.error(err)
+        })
     } else {
       this._sendMessage(attachment, userMessage)
     }
@@ -391,8 +400,14 @@ class Chat extends Component {
    */
   _shouldSetWaitTime = (shouldWaitXseconds, numberCallsWithoutAnyMessages) => {
     // Check if there is a waitTime specified by the backend or we have exceeded the number of calls without a message
-    if (shouldWaitXseconds || numberCallsWithoutAnyMessages >= MAX_NUMBER_WITHOUT_MESSAGES_BEFORE_WAITING) {
-      if (shouldWaitXseconds === false && numberCallsWithoutAnyMessages === MAX_NUMBER_WITHOUT_MESSAGES_BEFORE_WAITING) {
+    if (
+      shouldWaitXseconds ||
+      numberCallsWithoutAnyMessages >= MAX_NUMBER_WITHOUT_MESSAGES_BEFORE_WAITING
+    ) {
+      if (
+        shouldWaitXseconds === false &&
+        numberCallsWithoutAnyMessages === MAX_NUMBER_WITHOUT_MESSAGES_BEFORE_WAITING
+      ) {
         console.warn('Polling should have returned a wait time (defaulting to 120 sec.)')
       }
       return true
@@ -426,7 +441,11 @@ class Chat extends Component {
         )
         shouldPoll = waitTime === 0
         shouldWaitXseconds = waitTime > 0
-        numberCallsWithoutAnyMessages = this._deteremNumberCallsWithoutAnyMessages(numberCallsWithoutAnyMessages, shouldWaitXseconds, messages)
+        numberCallsWithoutAnyMessages = this._deteremNumberCallsWithoutAnyMessages(
+          numberCallsWithoutAnyMessages,
+          shouldWaitXseconds,
+          messages,
+        )
         timeToSleep = waitTime * 1000
         errorCount = 0
       } catch (err) {
@@ -461,7 +480,7 @@ class Chat extends Component {
     this._isPolling = false
   }
 
-  render () {
+  render() {
     const {
       closeWebchat,
       preferences,
@@ -480,9 +499,15 @@ class Chat extends Component {
     } = this.props
     const { showSlogan, messages, inputHeight } = this.state
 
+    const showFullScreen = preferences.fullScreen === 'true'
+
     return (
       <div
-        className={cx('RecastAppChat CaiAppChat', { open: show, close: !show })}
+        className={cx(
+          'RecastAppChat CaiAppChat',
+          { open: show, close: !show },
+          { fullscreen: showFullScreen },
+        )}
         style={{ backgroundColor: preferences.backgroundColor, ...containerStyle }}
       >
         {secondaryView ? (
@@ -498,48 +523,46 @@ class Chat extends Component {
             readOnlyMode={readOnlyMode}
           />
         )}
-        <div
-          className={cx('RecastAppChat--content CaiAppChat--content')}
-          key='content'
-        >
+        <div className={cx('RecastAppChat--content CaiAppChat--content')} key='content'>
           {secondaryView
             ? secondaryContent
             : [
-              <Live
-                key='live'
-                messages={messages}
-                preferences={preferences}
-                sendMessage={this.sendMessage}
-                onScrollBottom={bool => this.setState({ showSlogan: bool })}
-                onRetrySendMessage={this.retrySendMessage}
-                onCancelSendMessage={this.cancelSendMessage}
-                showInfo={showInfo}
-                onClickShowInfo={onClickShowInfo}
-                containerMessagesStyle={containerMessagesStyle}
-                readOnlyMode={readOnlyMode}
-              />,
-              <div
-                key='slogan'
-                style={{ maxWidth: '23.0rem' }}
-                className={cx('RecastAppChat--slogan CaiAppChat--slogan', {
-                  'RecastAppChat--slogan--hidden CaiAppChat--slogan--hidden': !showSlogan,
-                })}
-              >
-                {'We run with SAP Conversational AI'}
-              </div>,
-            ]}
+                <Live
+                  key='live'
+                  messages={messages}
+                  preferences={preferences}
+                  sendMessage={this.sendMessage}
+                  onScrollBottom={bool => this.setState({ showSlogan: bool })}
+                  onRetrySendMessage={this.retrySendMessage}
+                  onCancelSendMessage={this.cancelSendMessage}
+                  showInfo={showInfo}
+                  onClickShowInfo={onClickShowInfo}
+                  containerMessagesStyle={containerMessagesStyle}
+                  readOnlyMode={readOnlyMode}
+                />,
+                <div
+                  key='slogan'
+                  style={{ maxWidth: '23.0rem' }}
+                  className={cx('RecastAppChat--slogan CaiAppChat--slogan', {
+                    'RecastAppChat--slogan--hidden CaiAppChat--slogan--hidden': !showSlogan,
+                  })}
+                >
+                  {'We run with SAP Conversational AI'}
+                </div>,
+              ]}
         </div>
-        { !readOnlyMode && <Input
-          menu={preferences.menu && preferences.menu.menu}
-          isOpen={show}
-          onSubmit={this.sendMessage}
-          preferences={preferences}
-          onInputHeight={height => this.setState({ inputHeight: height })}
-          enableHistoryInput={enableHistoryInput}
-          inputPlaceholder={propOr('Write a reply', 'userInputPlaceholder', preferences)}
-          characterLimit={propOr(0, 'characterLimit', preferences)}
-        />
-        }
+        {!readOnlyMode && (
+          <Input
+            menu={preferences.menu && preferences.menu.menu}
+            isOpen={show}
+            onSubmit={this.sendMessage}
+            preferences={preferences}
+            onInputHeight={height => this.setState({ inputHeight: height })}
+            enableHistoryInput={enableHistoryInput}
+            inputPlaceholder={propOr('Write a reply', 'userInputPlaceholder', preferences)}
+            characterLimit={propOr(0, 'characterLimit', preferences)}
+          />
+        )}
       </div>
     )
   }

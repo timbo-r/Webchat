@@ -14,7 +14,44 @@
 }
 
 @media only screen and (min-width: 420px) and (min-height: 575px) {
-  .RecastApp .RecastAppLive, .CaiApp .CaiAppLive {
+  .RecastApp .RecastAppLive:not(.fullscreen), .CaiApp .CaiAppLive:not(.fullscreen) {
     height: 460px;
+  }
+}
+
+.RecastApp .fullscreen .RecastAppLive, .CaiApp .fullscreen .CaiAppLive {
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.RecastApp .fullscreen .RecastAppLive--message-container, .CaiApp .fullscreen .CaiAppLive--message-container {
+  height: 100%;
+}
+
+@media only screen and (min-width: 640px) {
+  .RecastApp .fullscreen .RecastAppLive--message-container, .CaiApp .fullscreen .CaiAppLive--message-container {
+    width: 450px;
+  }
+}
+
+/* mobile landscape */
+@media only screen and (min-width: 768px) {
+  .RecastApp .fullscreen .RecastAppLive--message-container, .CaiApp .fullscreen .CaiAppLive--message-container {
+    width: 510px;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .RecastApp .fullscreen .RecastAppLive--message-container, .CaiApp .fullscreen .CaiAppLive--message-container {
+    width: 560px;
+  }
+}
+
+@media only screen and (min-width: 1280px) {
+  .RecastApp .fullscreen .RecastAppLive--message-container, .CaiApp .fullscreen .CaiAppLive--message-container {
+    width: 680px;
   }
 }

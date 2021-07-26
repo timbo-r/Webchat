@@ -487,3 +487,88 @@
     display: none !important;
   }
 }
+
+.RecastApp .fullscreen .RecastAppMessage, .CaiApp .fullscreen .CaiAppMessage {
+  @media only screen and (min-width: 640px) {
+    .RecastAppText, .CaiAppText {
+      max-width: 300px;
+    }
+
+    .RecastAppQuickReplies, .CaiAppQuickReplies {
+      &--slider {
+        max-width: 390px;
+      }
+    }
+  }
+  
+  /* mobile landscape */
+  @media only screen and (min-width: 768px) {
+    .RecastAppText, .CaiAppText {
+      max-width: 300px;
+    }
+
+    .RecastAppQuickReplies, .CaiAppQuickReplies {
+      &--slider {
+        max-width: 490px;
+      }
+    }
+  }
+  
+  @media only screen and (min-width: 1024px) {
+    .RecastAppText, .CaiAppText {
+      max-width: 300px;
+    }
+
+    .RecastAppQuickReplies, .CaiAppQuickReplies {
+      &--slider {
+        max-width: 490px;
+      }
+    }
+  }
+  
+  @media only screen and (min-width: 1280px) {
+    .RecastAppText, .CaiAppText {
+      max-width: 340px;
+    }
+
+    .RecastAppQuickReplies, .CaiAppQuickReplies {
+      &--slider {
+        max-width: 490px;
+      }
+    }
+  }
+}
+
+/*
+ * Slider
+ */
+.RecastAppSlider,
+.Slider,
+.CaiAppSlider,
+.Slider {
+  
+  @media only screen and (min-width: 640px) {
+    .slick-next {
+      display: none !important;
+    }
+  }
+  
+  /* mobile landscape */
+  @media only screen and (min-width: 768px) {
+    .slick-next {
+      display: none !important;
+    }
+  }
+  
+  @media only screen and (min-width: 1024px) {
+    .slick-next {
+      display: none !important;
+    }
+  }
+  
+  @media only screen and (min-width: 1280px) {
+    .slick-next {
+      display: none !important;
+    }
+  }
+}

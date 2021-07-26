@@ -25,3 +25,11 @@
     opacity: 1;
   }
 }
+
+.RecastApp .fullscreen .RecastAppInput, .CaiApp .fullscreen .CaiAppInput {
+  position: absolute;
+
+  textarea {
+    max-height: 18px !important;
+  }
+}

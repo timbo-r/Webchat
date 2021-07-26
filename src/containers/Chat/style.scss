@@ -50,7 +50,7 @@
 }
 
 @media only screen and (min-width: 420px) {
-  .RecastApp .RecastAppChat, .CaiApp .CaiAppChat {
+  .RecastApp .RecastAppChat:not(.fullscreen), .CaiApp .CaiAppChat:not(.fullscreen) {
     right: 10px;
     bottom: 10px;
     border-radius: 3px;
@@ -70,5 +70,18 @@
     &--slogan {
       display: none;
     }
+  }
+}
+
+.RecastApp .RecastAppChat.fullscreen, .CaiApp .CaiAppChat.fullscreen {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  max-width: none;
+
+  .RecastAppChat--content, .CaiAppChat--content {
+    height: 100%;
+    // header-logo + input-padding + sendBtn-height
+    padding-bottom: calc(50px + 2 * 1rem + 22px);
   }
 }
