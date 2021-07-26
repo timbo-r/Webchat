@@ -10,18 +10,18 @@ import { getCredentialsFromLocalStorage } from 'helpers'
 
 import './style.scss'
 
-const NO_LOCALSTORAGE_MESSAGE
-  = 'Sorry, your browser does not support web storage. Are you in localhost ?'
+const NO_LOCALSTORAGE_MESSAGE =
+  'Sorry, your browser does not support web storage. Are you in localhost ?'
 
 @connect(
   state => ({
     isReady: state.conversation.conversationId,
-    }),
+  }),
   {
-  setCredentials,
-  setFirstMessage,
-  createConversation,
-  removeAllMessages,
+    setCredentials,
+    setFirstMessage,
+    createConversation,
+    removeAllMessages,
   },
 )
 class App extends Component {
@@ -29,7 +29,7 @@ class App extends Component {
     expanded: this.props.expanded || false,
     isReady: null,
   }
-  static getDerivedStateFromProps (props, state) {
+  static getDerivedStateFromProps(props, state) {
     const { isReady, preferences } = props
 
     // Since the conversation is only created after the first submit
@@ -39,28 +39,28 @@ class App extends Component {
       let expanded = null
 
       switch (preferences.openingType) {
-      case 'always':
-        expanded = true
-        break
-      case 'never':
-        expanded = false
-        break
-      case 'memory':
-        if (window.localStorage) {
-          expanded = localStorage.getItem('isChatOpen') === 'true'
-        } else {
-          console.log(NO_LOCALSTORAGE_MESSAGE)
-        }
-        break
-      default:
-        break
+        case 'always':
+          expanded = true
+          break
+        case 'never':
+          expanded = false
+          break
+        case 'memory':
+          if (window.localStorage) {
+            expanded = localStorage.getItem('isChatOpen') === 'true'
+          } else {
+            console.log(NO_LOCALSTORAGE_MESSAGE)
+          }
+          break
+        default:
+          break
       }
       return { expanded, isReady }
     }
     return { isReady }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { channelId, token, preferences, noCredentials, onRef } = this.props
     const credentials = getCredentialsFromLocalStorage(channelId)
     const payload = { channelId, token }
@@ -89,7 +89,7 @@ class App extends Component {
     this.props.setCredentials(payload)
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     const { onToggle, conversationHistoryId } = this.props
 
     if (prevState.expanded !== this.state.expanded) {
@@ -104,12 +104,17 @@ class App extends Component {
     }
   }
 
-  componentDidCatch (error, info) {
+  componentDidCatch(error, info) {
     console.log(error, info)
   }
 
   toggleChat = () => {
-    const { clearMessagesOnclose } = this.props
+    const { clearMessagesOnclose, preferences } = this.props
+
+    if (preferences.doHistoryBack === 'true') {
+      window.history.back()
+    }
+
     this.setState({ expanded: !this.state.expanded }, () => {
       if (!this.state.expanded && clearMessagesOnclose) {
         this.clearMessages()
@@ -121,7 +126,7 @@ class App extends Component {
     this.props.removeAllMessages()
   }
 
-  render () {
+  render() {
     const {
       preferences,
       containerMessagesStyle,
@@ -184,7 +189,6 @@ class App extends Component {
           defaultMessageDelay={defaultMessageDelay}
           conversationHistoryId={conversationHistoryId}
           readOnlyMode={readOnlyMode}
-
         />
       </div>
     )
