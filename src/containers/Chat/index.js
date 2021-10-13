@@ -259,7 +259,7 @@ class Chat extends Component {
     }
 
     this.setState(
-      prevState => ({ messages: concat(prevState.messages, [backendMessage]) }),
+      prevState => ({ messages: concat(prevState.messages, [userMessage || backendMessage]) }),
       () => {
         if (sendMessagePromise) {
           addUserMessage(userMessage || backendMessage)
@@ -439,7 +439,9 @@ class Chat extends Component {
           conversationId,
           lastMessageId,
         )
-        shouldPoll = waitTime === 0
+        // Handle the case where waitTime is null
+        const waitingTime = typeof waitTime === 'number' ? waitTime : 0
+        shouldPoll = waitingTime === 0
         shouldWaitXseconds = waitTime > 0
         numberCallsWithoutAnyMessages = this._deteremNumberCallsWithoutAnyMessages(
           numberCallsWithoutAnyMessages,
